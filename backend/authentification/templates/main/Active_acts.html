@@ -1,0 +1,94 @@
+{%extends 'main/base.html' %}
+{%block title%} DashBoard{%endblock%}
+{%load static%}
+{%block content%}
+<div class="sidebar">
+  <img class="side-logo" src="{%static 'images/logo.png' %}"></img>
+  <div class="side-list">
+    <div class="side-item">
+      <div class="side-inner">
+        <img class="side-icon" src="{%static 'images/main.png' %}"/>
+      <a class="side-text" href="{%url 'admin_home' %}" >Main page</a>
+      </div>
+      
+    </div>
+    <div class="side-item active">
+      <div class="side-inner">
+        <img class="side-icon" src="{%static 'images/docs_active.png' %}"/>
+        <a class="side-text active" href="{%url 'active_acts' %}" >Active acts</a>
+      </div>
+     
+    </div>
+    <div class="side-item">
+      <div class="side-inner">
+        <img class="side-icon" src="{%static 'images/lock.png' %}"/>
+        <a class="side-text" href="{%url 'closed_acts' %}" >Closed acts</a>
+      </div>
+      
+    </div>
+
+    <div class="side-item">
+      <div class="side-inner">
+        <img class="side-icon" src="{%static 'images/lock.png' %}"/>
+        <a class="side-text" href="{%url 'request_register_screen' %}" >Registers/Users</a>
+      </div>
+      
+      </div>
+
+      
+  </div>
+</div>
+<div class="header-admin acts">
+  
+  <div class="header-info acts"> 
+
+    <div class="header-search">
+      <form action="{%url 'active_search'%}" method="get" class="d-flex" role="search">
+        <input class="header-form" name="query"  placeholder="we searching..." aria-label="Search" required>
+      </form>
+    </div>
+
+
+    <div class="header-left-group">
+      <div class="header-text">
+        <div class="header-user">{{request.user}}</div>
+        <div class="header-role">администратор</div>
+      </div>
+      <a href="{%url 'logout'%}" class="header-logout"><img src="{%static 'images/logout.png' %}" alt=""></a>
+    </div>
+    
+  </div>
+</div>
+<div class="active-act-page">
+	<div class="active-act-title">Active acts</div>
+
+	<table class="active-act-table">
+		<tr>
+			<th style="border-top-left-radius: 10px;">User</th>
+			<th>Device</th>
+			<th>Type of act</th>
+			<th>Date</th>
+			<th style="border-top-right-radius: 10px;" >Act</th>
+		</tr>
+		<div class="acts_acting_admin_wrapper">
+
+    
+		{%for act in acts%}
+		<tr>
+			<td>{{act.created_by}}</td>
+			<td>{{act.device}}</td>
+			<td>{{act.act}}</td>
+			<td>{{act.created_at}}</td>
+			<td>
+                {% if act.document %}
+                    <a href="{{ act.document.url }}" download><img class="download_icon" src="{%static 'images/download_icon.png ' %}" alt=""></a>
+                {% else %}
+                    No document available
+                {% endif %}
+            </td>
+		  </tr>
+		{%endfor%}
+  </div>
+	</table>
+</div>
+{%endblock%}

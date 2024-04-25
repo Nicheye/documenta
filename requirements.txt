@@ -1,0 +1,11 @@
+Django
+django-cors-headers
+djangorestframework
+djangorestframework-simplejwt
+docxtpl
+eventlet
+celery
+redis
+pillow
+#celery -A acting beat --loglevel=info
+#celery -A acting worker --loglevel=info -P eventlet

@@ -1,0 +1,37 @@
+{%extends 'main/base.html' %}
+{%block title%}Login{%endblock%}
+{%load static %}
+{%block content%}
+<form action="" method="post" class="auth_form">
+	<div class="auth_form_inner">
+		{%csrf_token%}
+		<div class="welcome-title">Welcome</div>
+		<img class="auth-logo" src="{%static 'images/logo.png' %}"></img>
+		<div class="auth-input-group">
+			<div class="auth-input-label">Login:</div>
+			{{form.username}}
+		</div>
+		<div class="auth-input-group">
+			<div class="auth-input-label">Password:</div>
+			
+			{{form.password}}
+			<div class="show-pass"><input type="checkbox" onclick="myFunction()">Show Password</div>
+			<script>
+			function myFunction() {
+					var x = document.getElementById("id_password");
+					if (x.type === "password") {
+						x.type = "text";
+					} else {
+						x.type = "password";
+					}
+					}
+			</script>
+		</div>
+		
+		<br>
+		<button type="submit" class="auth_btn">Log In</button>
+	
+	</div>
+	
+</form>
+{%endblock%}

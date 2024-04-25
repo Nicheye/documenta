@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend  # Adjusted volume path to match Dockerfile
+    depends_on:
+      - redis
+
+  redis:
+    image: redis
+
+  celery:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    command: >
+      sh -c "celery -A acting beat --loglevel=info &&
+             celery -A acting worker --loglevel=info -P eventlet"
+    volumes:
+      - ./backend:/app/backend  # Adjusted volume path to match Dockerfile
+    depends_on:
+      - app
+      - redis
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./front:/app/front
+    depends_on:
+      - app

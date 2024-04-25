@@ -1,0 +1,73 @@
+{%extends 'main/base.html' %}
+{%block title%} DashBoard{%endblock%}
+{%load static%}
+{%block content%}
+<div class="sidebar">
+  <img class="side-logo" src="{%static 'images/logo.png' %}"></img>
+  <div class="side-list">
+    <div class="side-item active">
+      <div class="side-inner">
+        <img class="side-icon" src="{%static 'images/main_active.png' %}"/>
+      <a class="side-text active" href="{%url 'admin_home' %}">Main page</a>
+      </div>
+      
+    </div>
+    <div class="side-item">
+      <div class="side-inner">
+        <img class="side-icon" src="{%static 'images/docs.png' %}"/>
+        <a class="side-text " href="{%url 'active_acts' %}">Active acts</a>
+      </div>
+     
+    </div>
+    <div class="side-item">
+      <div class="side-inner">
+        <img class="side-icon" src="{%static 'images/lock.png' %}"/>
+        <a class="side-text " href="{%url 'closed_acts' %}" >Closed acts</a>
+      </div>
+      
+    </div>
+
+    <div class="side-item">
+      <div class="side-inner">
+        <img class="side-icon" src="{%static 'images/lock.png' %}"/>
+        <a class="side-text" href="{%url 'request_register_screen' %}" >Registers/Users</a>
+      </div>
+      
+      </div>
+  </div>
+</div>
+<div class="header-admin">
+  <div class="header-info">
+     
+    <div class="header-text">
+      <div class="header-user">{{request.user}}</div>
+      <div class="header-role">администратор</div>
+    </div>
+    <a href="{%url 'logout'%}" class="header-logout"><img src="{%static 'images/logout.png' %}" alt=""></a>
+    
+
+  </div>
+</div>
+<div class="main-page">
+  <div class="main-page-title">Main page</div>
+  <div class="main-wrapper">
+    <div class="main-wrapper-title">Summary of statistics for 30 calendar days</div>
+
+    <div class="act-summury-group">
+      <div class="act-summery-title">Number of applications</div>
+      <div class="act-summery-number">{{total}}</div>
+    </div>
+
+    <div class="act-wrapper">
+      {%for act in acts%}
+        <div class="act-group">
+          <div class="act-count id">{{act.id}}</div>
+          <div class="act-label">{{act.name}}</div>
+          <div class="act-count">{{act.count}}</div>
+        </div>
+        
+      {%endfor%}
+    </div>
+  </div>
+</div>
+{%endblock%}
