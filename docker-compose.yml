@@ -10,13 +10,13 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
-          memory: 370M
+          cpus: '0.5'
+          memory: 200M
         reservations:
-          cpus: '2'
-          memory: 350M
+          cpus: '0.1'
+          memory: 100M
     volumes:
-      - ./backend:/app/backend  # Adjusted volume path to match Dockerfile
+      - ./backend:/app/backend
     depends_on:
       - redis
 
@@ -30,30 +30,27 @@ services:
       dockerfile: Dockerfile.python
     command: >
       sh -c "celery -A acting beat --loglevel=info &&
-             celery -A acting worker --loglevel=info -P eventlet"
+             celery -A acting worker --loglevel=info -P eventlet" # Change eventlet to gevent for lighter worker pool
     volumes:
-      - ./backend:/app/backend  # Adjusted volume path to match Dockerfile
+      - ./backend:/app/backend
     depends_on:
       - app
       - redis
 
   frontend:
-    
     build:
       context: .
       dockerfile: Dockerfile.node
     ports:
       - "5173:5173"
-    
     deploy:
       resources:
         limits:
-          cpus: '1'
-          memory: 370M
+          cpus: '0.5'
+          memory: 200M
         reservations:
-          cpus: '2'
-          memory: 350m
-
+          cpus: '0.1'
+          memory: 100M
     volumes:
       - ./front:/app/front
     depends_on:
