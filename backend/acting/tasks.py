@@ -36,9 +36,9 @@ def manage_document():
         if closed_doc.created_at + timedelta(hours=720)<timezone.now():
             closed_doc.delete()
     
-def_path = 'D:/new_imperkom/backend/docs_templates/No_Image_Available.jpg'
-room_path = 'D:/new_imperkom/backend/docs_templates/room_act.docx'
-final_path = 'D:/new_imperkom/backend/docs_templates/final_act.docx'
+def_path = 'backend/docs_templates/No_Image_Available.jpg'
+room_path = 'backend/docs_templates/room_act.docx'
+final_path = 'backend/docs_templates/final_act.docx'
 @shared_task
 def create_document(document_id):
     document = Dock.objects.get(id=document_id)
@@ -71,8 +71,8 @@ def create_document(document_id):
             remote_controls = key.remote_contrls 
             ac_controls = key.ac_controls 
             comments = key.comments 
-            template_path = 'D:/new_imperkom/backend/docs_templates/act_start.docx'  # Path to your template Word document
-            output_path = f'D:/new_imperkom/backend/tmp_images/{document_id}.docx'  # Path to save the filled Word document
+            template_path = 'backend/docs_templates/act_start.docx'  # Path to your template Word document
+            output_path = f'backend/tmp_images/{document_id}.docx'  # Path to save the filled Word document
             
             doc = DocxTemplate(template_path)
             data = {
@@ -107,7 +107,7 @@ def create_document(document_id):
             rooms = Detail.objects.filter(doc_id=document_id)  
 
             for room in rooms:
-                output_path_room = f'D:/new_imperkom/backend/tmp_images/room_{room.id}.docx'
+                output_path_room = f'backend/tmp_images/room_{room.id}.docx'
                 doc_room = DocxTemplate(room_path)
                 elements = Element.objects.filter(detail=room)
                 elem_arr = []
@@ -134,7 +134,7 @@ def create_document(document_id):
                 except:
                     pass
             #final
-            output_path_final = f'D:/new_imperkom/backend/tmp_images/final_{document.id}.docx'
+            output_path_final = f'backend/tmp_images/final_{document.id}.docx'
             doc_fin = DocxTemplate(final_path)
             tenants_arr=[]
             for tenant in tenants:

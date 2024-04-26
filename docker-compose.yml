@@ -7,6 +7,14 @@ services:
       dockerfile: Dockerfile.python
     ports:
       - "8000:8000"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 370M
+        reservations:
+          cpus: '2'
+          memory: 350M
     volumes:
       - ./backend:/app/backend  # Adjusted volume path to match Dockerfile
     depends_on:
@@ -30,11 +38,22 @@ services:
       - redis
 
   frontend:
+    
     build:
       context: .
       dockerfile: Dockerfile.node
     ports:
       - "5173:5173"
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 370M
+        reservations:
+          cpus: '2'
+          memory: 350m
+
     volumes:
       - ./front:/app/front
     depends_on:
