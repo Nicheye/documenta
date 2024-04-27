@@ -1,0 +1,5 @@
+backend/acting/__pycache__
+backend/authentification/__pycache__
+backend/backendmusic/__pycache__
+front/node_modules
+front/dist
