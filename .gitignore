@@ -1,4 +1,6 @@
 backend/acting/__pycache__
+backend/acting/tmp_images
+backend/acting/media
 backend/authentification/__pycache__
 backend/backendmusic/__pycache__
 front/node_modules

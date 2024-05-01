@@ -1,18 +1,22 @@
 from PIL import Image
+import os
+from datetime import timedelta
 from docx.shared import Pt
-from .serializer import *
-from .models import Document as Dock
-from django.utils import timezone
 from django.core.files.base import ContentFile
+from django.utils import timezone
+from celery import shared_task
+from celery.utils.log import get_task_logger
 from docxcompose.composer import Composer
 from docx import Document as Document_compose
 from docxtpl import DocxTemplate, InlineImage
-import os
-from celery import shared_task
-from celery.utils.log import get_task_logger
-from datetime import timedelta
+from .serializer import *
+from .models import Document as Dock
 
+# Initialize logger
+logger = get_task_logger(__name__)
 
+room_path = 'backend/docs_templates/room_act.docx'
+final_path = 'backend/docs_templates/final_act.docx'
 
 def is_valid_image(image_path):
     try:
@@ -23,13 +27,10 @@ def is_valid_image(image_path):
             return True
     except Exception as e:
         # Image cannot be loaded or is invalid
+        logger.error(f"Error loading image: {e}")
         return False
 
-
-room_path = 'backend/docs_templates/room_act.docx'
-final_path = 'backend/docs_templates/final_act.docx'
-
-
+@shared_task
 def create_document(document_id):
     document = Dock.objects.get(id=document_id)
     if document:
@@ -74,8 +75,8 @@ def create_document(document_id):
                 'gas_text': gas_text,
                 'water': InlineImage(doc, image_descriptor=water, width=Pt(300), height=Pt(200)) if is_valid_image(water) else None,
                 'water_text': water_text,
-                'electricity': InlineImage(doc, image_descriptor=electricity, width=Pt(300), height=Pt(200)) if is_valid_image(electricity) else None,
-                'electricity_text': electricity_text,
+                'elictricity': InlineImage(doc, image_descriptor=electricity, width=Pt(300), height=Pt(200)) if is_valid_image(electricity) else None,
+                'elicticity_text': electricity_text,
                 'keys_photo': InlineImage(doc, image_descriptor=keys_photo, width=Pt(300), height=Pt(200)) if is_valid_image(keys_photo) else None,
                 'door': door,
                 'mailbox': mailbox,
@@ -118,7 +119,7 @@ def create_document(document_id):
                 try:
                     composer.append(Document_compose(output_path_room))
                 except Exception as e:
-                    print(f"Error appending room document: {e}")
+                    logger.error(f"Error appending room document: {e}")
 
             # Final document composition
             output_path_final = f'backend/tmp_images/final_{document.id}.docx'
@@ -154,7 +155,7 @@ def create_document(document_id):
             try:
                 composer.append(Document_compose(output_path_final))
             except Exception as e:
-                print(f"Error appending final document: {e}")
+                logger.error(f"Error appending final document: {e}")
 
             # Save the composed document to the database
             composer.save(output_path)
@@ -163,15 +164,11 @@ def create_document(document_id):
 
 # Additional imports and shared_task decorator
 
-logger = get_task_logger(__name__)
-
 @shared_task
 def my_periodic_task():
     manage_document()
     cleaner('backend/tmp_images')
     logger.info("Running periodic task...")
-
-
 
 @shared_task
 def manage_document():
@@ -204,4 +201,3 @@ def cleaner(folder_path):
                 print(f"Deleted: {file_path}")
         except Exception as e:
             print(f"Error deleting {file_path}: {e}")
-    
