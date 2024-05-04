@@ -11,7 +11,9 @@ urlpatterns = [
 	path('active_search/',active_searchBar,name="active_search"),
 	path('closed_search/',closed_searchBar,name="closed_search"),
 	path('accept_users/',request_register_screen,name='request_register_screen'),
+    path('active_users/',active_users_screen,name='active_users'),
 	path('accept/<int:id>',accept_user,name='accept_user_admin'),
 	path('decline/<int:id>',decline_user,name='decline_user_admin'),
+    path('decline_active/<int:id>',decline_active_user,name='decline_active_user'),
     path('register/',RegisterView.as_view(),name='register'),
 ]

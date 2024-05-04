@@ -163,7 +163,7 @@ try {
 	<select className="begin_work_select" 
 			  placeholder="Choice of act" 
 			   value={act}
-			  required 
+			  
 			  onChange={e => setAct(e.target.value)}
 			  >
 
@@ -180,7 +180,7 @@ try {
              placeholder={previousdata.country} 
              name='country'  
              type='text' value={country}
-             required 
+             
              onChange={e => setCountry(e.target.value)}/>
 
 <label for="formFile" class="form-label">City</label>
@@ -188,7 +188,7 @@ try {
             placeholder={previousdata.city}
              name='city'  
              type='text' value={city}
-             required 
+            
              onChange={e => setCity(e.target.value)}/>
 
 <label for="formFile" class="form-label">Street</label>      
@@ -196,7 +196,7 @@ try {
              placeholder={previousdata.street}
              name='street'  
              type='text' value={street}
-             required 
+             
              onChange={e => setStreet(e.target.value)}/>
 
 <label for="formFile" class="form-label">Building</label>
@@ -204,7 +204,7 @@ try {
              placeholder={previousdata.building}
              name='building'  
              type='text' value={building}
-             required 
+             
              onChange={e => setBuilding(e.target.value)}/>
 
 	<label for="formFile" class="form-label">Apartment</label>
@@ -212,7 +212,7 @@ try {
              placeholder={previousdata.apartment}
              name='apartment'  
              type='text' value={apartment}
-             required 
+              
              onChange={e => setApartment(e.target.value)}/>
 
 

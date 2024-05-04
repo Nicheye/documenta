@@ -27,17 +27,17 @@
       
     </div>
 
-	<div class="side-item active">
-		<div class="side-inner active">
+	<div class="side-item ">
+		<div class="side-inner ">
 		  <img class="side-icon" src="{%static 'images/lock.png' %}"/>
 		  <a class="side-text" href="{%url 'request_register_screen' %}" >Registers/Users</a>
 		</div>
 		
 	  </div>
-
-	  <div class="side-item">
-        <div class="side-inner">
-          <img class="side-icon" src="{%static 'images/user_icon.png' %}"/>
+    
+      <div class="side-item active">
+        <div class="side-inner active">
+          <img class="side-icon" src="{%static 'images/active_user_icon.png' %}"/>
           <a class="side-text" href="{%url 'active_users' %}" >Active Users</a>
         </div>
         
@@ -57,7 +57,7 @@
 	</div>
   </div>
 <div class="active-act-page">
-	<div class="active-act-title">Monitor request on users</div>
+	<div class="active-act-title">Active users</div>
 
 	<table class="active-act-table">
 		<tr>
@@ -78,7 +78,7 @@
 			<td>{{user.password_look}}</td>
 			<td>{{user.ip_adress}}</td>
 			<td >{{user.email}}</th>
-			<td><a class="accept-link" href="{%url 'accept_user_admin' user.id%}" style="color: green;">accept</a>   <a class="decline-link" href="{%url 'decline_user_admin' user.id%}" style="color: red;">decline</a></td>
+			<td> <a class="decline-link" href="{%url 'decline_active_user' user.id%}" style="color: red;">decline</a></td>
 			
 		  </tr>
 		{%endfor%}

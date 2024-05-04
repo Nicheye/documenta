@@ -1,24 +1,22 @@
 import React, { useRef, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Assuming you're using react-router-dom
+import { useNavigate } from 'react-router-dom';
 
 const Signature = (props) => {
   const id = props.id;
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const navigate = useNavigate();
-  const [name,setName] = useState('');
-  const [status,setStatus] = useState('tenant');
-
-  const [email,setEmail] = useState('')
-
+  const [name, setName] = useState('');
+  const [status, setStatus] = useState('tenant');
+  const [email, setEmail] = useState('');
 
   const startDrawing = (event) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     const rect = canvas.getBoundingClientRect();
     let x, y;
-    
+
     if (event.type === 'mousedown' || event.type === 'mousemove') {
       x = event.clientX - rect.left;
       y = event.clientY - rect.top;
@@ -63,109 +61,92 @@ const Signature = (props) => {
 
   const saveSignature = async () => {
     const canvas = canvasRef.current;
-    
-    // Get the data URL of the canvas content (as PNG)
-    const dataURL = canvas.toDataURL('image/png');
-    
-    // Extract the base64-encoded image data
-    const imageData = dataURL.split(',')[1]; // Remove the 'data:image/png;base64,' prefix
-    
-    // Convert the base64 string to a Blob
-    const blob = b64toBlob(imageData, 'image/png');
-    
-    // Create a FormData object
-    const formData = new FormData();
-    
-    // Append the Blob to the FormData object with a specified filename
-    formData.append('name',name);
-    formData.append('doc',id);
-    formData.append('sign', blob, 'signature.png');
-    formData.append('email',email);
-    formData.append('status',status)
-   
 
-    // Set up the Axios config
+    const dataURL = canvas.toDataURL('image/png');
+    const imageData = dataURL.split(',')[1];
+    const blob = b64toBlob(imageData, 'image/png');
+    const formData = new FormData();
+
+    formData.append('name', name);
+    formData.append('doc', id);
+    formData.append('sign', blob, 'signature.png');
+    formData.append('email', email);
+    formData.append('status', status);
+
     const config = {
       headers: {
-      'Content-Type': 'multipart/form-data' 
+        'Content-Type': 'multipart/form-data',
       },
-      withCredentials: true
+      withCredentials: true,
     };
-    
+
     try {
-      
-      // Make the POST request to your backend server with the FormData
-      const response = await axios.post(`http://127.0.0.1:8000/api/v1/ownership/${id}`, formData, config );
-      console.log(response.data)
-      setName('')
-      clearCanvas()
-      setEmail('')
+      const response = await axios.post(`http://127.0.0.1:8000/api/v1/ownership/${id}`, formData, config);
+      console.log(response.data);
+      setName('');
+      clearCanvas();
+      setEmail('');
     } catch (error) {
-      
       console.error('Error saving signature:', error);
     }
-    };
-    
-    // Function to convert a base64 string to a Blob
-    const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
+  };
+
+  const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
     const byteCharacters = atob(b64Data);
     const byteArrays = [];
-    
+
     for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
       const slice = byteCharacters.slice(offset, offset + sliceSize);
-    
       const byteNumbers = new Array(slice.length);
+
       for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
+        byteNumbers[i] = slice.charCodeAt(i);
       }
-    
+
       const byteArray = new Uint8Array(byteNumbers);
       byteArrays.push(byteArray);
     }
-    
+
     const blob = new Blob(byteArrays, { type: contentType });
     return blob;
-    };
+  };
 
   return (
     <form className='signature_form' onSubmit={saveSignature}>
-      
-      
-      <label  class="form-label">Status</label>
-		<select className="begin_work_select" 
-				placeholder="Status" 
-				value={status}
-				required 
-				onChange={e => setStatus(e.target.value)}
-				>
-				<option value='tenant'><div className="begin-option">tenant</div></option>
-				<option value='landlord'><div className="begin-option">landlord</div></option>
-				<option value='owner'><div className="begin-option">owner</div></option>
-						
-		</select>
+      <label className="form-label">Status</label>
+      <select
+        className="begin_work_select"
+        value={status}
+        onChange={e => setStatus(e.target.value)}
+      >
+        <option value='tenant'>Tenant</option>
+        <option value='landlord'>Landlord</option>
+        <option value='owner'>Owner</option>
+      </select>
 
-		<label  class="form-label">Name</label>
-		<input className="work_input" 
-				placeholder="Name" 
-				name='Name'  
-				type='text' value={name}
-				required 
-				onChange={e => setName(e.target.value)}/>
-		
-		<label className="form-label">Email</label>
-    <input 
-      className="work_input" 
-      type="email" 
-      placeholder="Enter your email" 
-      name="email" 
-      value={email} 
-      required 
-      onChange={e => setEmail(e.target.value)}
-    />
+      <label className="form-label">Name</label>
+      <input
+        className="work_input"
+        placeholder="Name"
+        name='Name'
+        type='text'
+        value={name}
+        onChange={e => setName(e.target.value)}
+      />
 
-        <canvas
+      <label className="form-label">Email</label>
+      <input
+        className="work_input"
+        type="email"
+        placeholder="Enter your email"
+        name="email"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+      />
+
+      <canvas
         ref={canvasRef}
-        width={220}
+        width={200} // Adjust canvas width based on screen size
         height={200}
         style={{ border: '1px solid black' }}
         className='signature_pad'
@@ -177,8 +158,7 @@ const Signature = (props) => {
         onTouchEnd={endDrawing}
       />
 
-    
-    <button className='condition-close-btn' onClick={clearCanvas} type='button'>Clear</button>
+      <button className='condition-close-btn' onClick={clearCanvas} type='button'>Clear</button>
       <button className='condition-save-btn' type='submit'>Save</button>
     </form>
   );

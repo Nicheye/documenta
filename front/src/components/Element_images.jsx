@@ -48,38 +48,43 @@ const Element_images = () => {
 
   const submit = async (e) => {
     e.preventDefault();
-
-    const photo = {
-      photo: image.pictureAsFile,
-    };
-
+  
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
       withCredentials: true,
     };
-
+  
     try {
-      const { data } = await axios.post(
-        `http://127.0.0.1:8000/api/v1/element_photo/${id}`,
-        photo,
-        config
-      );
-      setData([]);
-      setImage('');
-      // Navigate to '/next-screen/:id' route
+      for (const selectedImage of image) {
+        const formData = new FormData();
+        formData.append('photo', selectedImage);
+        
+        await axios.post(
+          `http://127.0.0.1:8000/api/v1/element_photo/${id}`,
+          formData,
+          config
+        );
+      }
+      
+      setData([]); // Clear data after successful upload
+      setImage([]); // Clear image state after successful upload
+      fetchData(); // Fetch updated data after uploading images
     } catch (error) {
       console.log(error);
     }
   };
+  
+    
 
-  const uploadImage = (e) => {
-    setImage({
-      picturePreview: URL.createObjectURL(e.target.files[0]),
-      pictureAsFile: e.target.files[0],
-    });
-  };
+    
+
+    const uploadImage = (e) => {
+      const selectedImages = Array.from(e.target.files);
+      setImage(selectedImages);
+    };
+    
 
   const delete_image = async(id) =>{
     try {
@@ -129,6 +134,7 @@ const Element_images = () => {
 					type="file"
 					id="formFile"
 					required
+          multiple
 					placeholder="Upload Water Data"
 					onChange={uploadImage}
 					accept="image/png, image/jpeg"

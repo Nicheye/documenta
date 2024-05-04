@@ -85,7 +85,7 @@ try {
              placeholder="Apartment entrance door" 
              name='apartment'  
              type='text' value={door}
-             required 
+              
              onChange={e => setDoor(e.target.value)}/>
 
 <label  class="form-label">Mailbox</label>
@@ -93,7 +93,7 @@ try {
              placeholder="Mailbox" 
              name='apartment'  
              type='text' value={mailbox}
-             required 
+              
              onChange={e => setMailbox(e.target.value)}/>
 
 <label  class="form-label">Keys from the building</label>
@@ -102,7 +102,7 @@ try {
 			 entrance" 
              name='apartment'  
              type='text' value={k_from_b}
-             required 
+              
              onChange={e => setK_from_b(e.target.value)}/>
 
 <label  class="form-label">Garage / parking</label>
@@ -110,7 +110,7 @@ try {
              placeholder="Garage / parking" 
              name='apartment'  
              type='text' value={parking}
-             required 
+              
              onChange={e => setParking(e.target.value)}/>
 
 <label  class="form-label">Remote controls</label>
@@ -118,7 +118,7 @@ try {
              placeholder="Remote controls" 
              name='apartment'  
              type='text' value={remote_contrls}
-             required 
+              
              onChange={e => setRemote_contrls(e.target.value)}/>
 
 <label  class="form-label">AC remote controls</label>
@@ -126,7 +126,7 @@ try {
              placeholder="AC remote controls" 
              name='apartment'  
              type='text' value={ac_controls}
-             required 
+              
              onChange={e => setAc_controls(e.target.value)}/>
 
 <label  class="form-label">Comments on condition</label>
@@ -134,7 +134,7 @@ try {
              placeholder="Comments" 
              name='apartment'  
              type='text' value={comments}
-             required 
+              
              onChange={e => setComments(e.target.value)}/>
 
 

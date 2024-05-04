@@ -15,9 +15,9 @@ class Home_User_View(APIView):
 		user = request.user
 		if user.is_proved==True:
 			user_ser = UserSerializer(user)
-			active_acts = Document.objects.filter(is_aproved=True,is_active=True,created_by=user)
+			active_acts = Document.objects.filter(is_aproved=True,is_active=True,is_visible=True ,created_by=user)
 			active_ser = Document_serializer(active_acts,many=True)
-			draft_acts = Document.objects.filter(is_aproved=False,is_active=True,created_by=user).order_by('-id')
+			draft_acts = Document.objects.filter(is_aproved=False,is_active=True,created_by=user,is_visible=True).order_by('-id')
 			draft_ser = Document_serializer(draft_acts,many=True)
 
 			return Response({
@@ -142,7 +142,8 @@ class Main_Act_View(APIView):
 				id=kwargs.get('id',None)
 				doc = Document.objects.get(id=id)
 				if doc:
-					doc.delete()
+					doc.is_visible=False
+					doc.save()
 					return Response({'everythin successuflly deleteed'})
 			except Exception as e:
 				return Response({'message':str(e)})

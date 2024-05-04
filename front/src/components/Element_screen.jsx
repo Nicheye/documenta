@@ -104,7 +104,7 @@ try {
 		<select className="begin_work_select" 
 				placeholder="Status" 
 				value={name}
-				required 
+				 
 				onChange={e => setName(e.target.value)}
 				>
 				<option value='Floors'><div className="begin-option">Floors</div></option>
@@ -121,7 +121,7 @@ try {
 				placeholder="Comments" 
 				name='Comments'  
 				type='text' value={comments}
-				required 
+				 
 				onChange={e => setComments(e.target.value)}/>
 		<button  class="condition-close-btn tenant" >Add</button>
 		</form>

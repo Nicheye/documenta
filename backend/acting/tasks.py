@@ -11,24 +11,39 @@ from docx import Document as Document_compose
 from docxtpl import DocxTemplate, InlineImage
 from .serializer import *
 from .models import Document as Dock
+from datetime import datetime
+import io
+from pathlib import Path
 
+import magic
+import logging
 # Initialize logger
 logger = get_task_logger(__name__)
+logger.setLevel(logging.DEBUG)
 
 room_path = 'backend/docs_templates/room_act.docx'
 final_path = 'backend/docs_templates/final_act.docx'
 
-def is_valid_image(image_path):
+def image_to_jpg(image_path_or_stream):
+    f = io.BytesIO()
     try:
-        # Open the image file
-        with Image.open(image_path) as img:
-            # Check if the image can be loaded
-            img.verify()
-            return True
+        if isinstance(image_path_or_stream, str):
+            path = Path(image_path_or_stream)
+            if path.suffix in {'.jpg', '.png', '.jfif', '.exif', '.gif', '.tiff', '.bmp'}:
+                f = open(image_path_or_stream, mode='rb')
+            else:
+                Image.open(image_path_or_stream).convert('RGB').save(f, format='JPEG')
+        else:
+            buffer = image_path_or_stream.read()
+            mime_type = magic.from_buffer(buffer, mime=True)
+            if mime_type not in {'image/jpeg', 'image/png', 'image/gif', 'image/tiff', 'image/x-ms-bmp'}:
+                Image.open(io.BytesIO(buffer)).convert('RGB').save(f, format='JPEG')
+            else:
+                f.write(buffer)
     except Exception as e:
-        # Image cannot be loaded or is invalid
-        logger.error(f"Error loading image: {e}")
-        return False
+        logger.error(f"Error converting image to JPEG: {e}")
+    return f
+
 
 @shared_task
 def create_document(document_id):
@@ -44,16 +59,16 @@ def create_document(document_id):
 
         address = str(document.country) + str(document.city) + str(document.street) + str(document.building) + str(document.apartment) or None
         
-        gas = document.gas if document.gas else 'backend/docs_templates/No_Image_Available.jpg'
+        gas = image_to_jpg(document.gas) if document.gas else 'backend/docs_templates/No_Image_Available.jpg'
         gas_text = document.gas_text if document.gas_text else None
-        water = document.water if document.water else 'backend/docs_templates/No_Image_Available.jpg'
+        water = image_to_jpg(document.water) if document.water else 'backend/docs_templates/No_Image_Available.jpg'
         water_text = document.water_text if document.water_text else None
-        electricity = document.elictricity if document.elictricity else 'backend/docs_templates/No_Image_Available.jpg'
+        electricity = image_to_jpg(document.elictricity) if document.elictricity else 'backend/docs_templates/No_Image_Available.jpg'
         electricity_text = document.elictiricity_text if document.elictiricity_text else None
         
         keys = Keys.objects.get(doc=document)
         if keys:
-            keys_photo = keys.keys_image if keys.keys_image else 'backend/docs_templates/No_Image_Available.jpg'
+            keys_photo = image_to_jpg(keys.keys_image) if keys.keys_image else 'backend/docs_templates/No_Image_Available.jpg'
             door = keys.door 
             mailbox = keys.mailbox
             k_from_b = keys.k_from_b 
@@ -71,13 +86,13 @@ def create_document(document_id):
                 'main_ll': main_ll.name if main_ll else '',
                 'act': document.act,
                 'address': address,
-                'gas': InlineImage(doc, image_descriptor=gas, width=Pt(300), height=Pt(200)) if is_valid_image(gas) else None,
+                'gas': InlineImage(doc, image_descriptor=gas, width=Pt(300), height=Pt(200)),
                 'gas_text': gas_text,
-                'water': InlineImage(doc, image_descriptor=water, width=Pt(300), height=Pt(200)) if is_valid_image(water) else None,
+                'water': InlineImage(doc, image_descriptor=water, width=Pt(300), height=Pt(200)),
                 'water_text': water_text,
-                'elictricity': InlineImage(doc, image_descriptor=electricity, width=Pt(300), height=Pt(200)) if is_valid_image(electricity) else None,
+                'elictricity': InlineImage(doc, image_descriptor=electricity, width=Pt(300), height=Pt(200)),
                 'elicticity_text': electricity_text,
-                'keys_photo': InlineImage(doc, image_descriptor=keys_photo, width=Pt(300), height=Pt(200)) if is_valid_image(keys_photo) else None,
+                'keys_photo': InlineImage(doc, image_descriptor=keys_photo, width=Pt(300), height=Pt(200)),
                 'door': door,
                 'mailbox': mailbox,
                 'k_from_b': k_from_b,
@@ -107,7 +122,7 @@ def create_document(document_id):
                     elem_ser['images'] = p_ob
 
                     for photo in photos:
-                        img_obj = InlineImage(doc_room, photo.photo, width=Pt(300), height=Pt(200)) if is_valid_image(photo.photo) else None
+                        img_obj = InlineImage(doc_room, image_to_jpg(photo.photo), width=Pt(300), height=Pt(200))
                         if img_obj:
                             p_ob.append(img_obj)
                     elem_arr.append(elem_ser)
@@ -126,7 +141,7 @@ def create_document(document_id):
             doc_fin = DocxTemplate(final_path)
             tenants_arr = []
             for tenant in tenants:
-                sign = InlineImage(doc_fin, tenant.sign, width=Pt(300), height=Pt(200)) if is_valid_image(tenant.sign) else None
+                sign = InlineImage(doc_fin, image_to_jpg(tenant.sign), width=Pt(300), height=Pt(200))
                 if sign:
                     tenant_data = Ownership_serializer(tenant).data
                     tenant_data['sign'] = sign
@@ -134,7 +149,7 @@ def create_document(document_id):
             
             ll_arr = []
             for landlord in ll:
-                sign = InlineImage(doc_fin, landlord.sign, width=Pt(300), height=Pt(200)) if is_valid_image(landlord.sign) else None
+                sign = InlineImage(doc_fin, image_to_jpg(landlord.sign), width=Pt(300), height=Pt(200))
                 if sign:
                     landlord_data = Ownership_serializer(landlord).data
                     landlord_data['sign'] = sign
@@ -142,13 +157,15 @@ def create_document(document_id):
             
             owners_arr = []
             for owner in owners:
-                sign = InlineImage(doc_fin, owner.sign, width=Pt(300), height=Pt(200)) if is_valid_image(owner.sign) else None
+                sign = InlineImage(doc_fin, image_to_jpg(owner.sign), width=Pt(300), height=Pt(200))
                 if sign:
                     owner_data = Ownership_serializer(owner).data
                     owner_data['sign'] = sign
                     owners_arr.append(owner_data)
 
             date = document.created_at.date()
+            date = datetime.strptime(date, '%Y-%m-%d')
+            date = date.strftime('%d.%m.%Y')
             context2 = {'owners': owners_arr, 'landlords': ll_arr, 'tenants': tenants_arr, 'date': date}
             doc_fin.render(context2)
             doc_fin.save(output_path_final)
@@ -181,10 +198,10 @@ def manage_document():
             active_doc.is_active = False
             active_doc.save()
     
-    closed_docs = Dock.objects.filter(is_approved=True, is_active=False)
-    for closed_doc in closed_docs:
-        if closed_doc.created_at + timedelta(hours=720) < timezone.now():
-            closed_doc.delete()
+    # closed_docs = Dock.objects.filter(is_approved=True, is_active=False)
+    # for closed_doc in closed_docs:
+    #     if closed_doc.created_at + timedelta(hours=720) < timezone.now():
+    #         closed_doc.delete()
 
 @shared_task
 def cleaner(folder_path):

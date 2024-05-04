@@ -7,5 +7,6 @@ eventlet
 celery
 redis
 pillow
+python-magic
 #celery -A acting beat --loglevel=info
 #celery -A acting worker --loglevel=info -P eventlet

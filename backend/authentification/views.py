@@ -38,12 +38,15 @@ class LogoutView(APIView):
 def home(request):
      
      user = request.user
-     if user.is_superuser ==True:
-          acts = Act.objects.all()
-          sum_aps = 0
-          for act in acts:
-               sum_aps+=act.count
-          return render(request,'main/Dashboard.html',{'acts':acts,'total':sum_aps})
+     if user.is_authenticated==True:
+          if user.is_superuser ==True:
+               acts = Act.objects.all()
+               sum_aps = 0
+               for act in acts:
+                    sum_aps+=act.count
+               return render(request,'main/Dashboard.html',{'acts':acts,'total':sum_aps})
+     else:
+          return redirect('login')
      return render(request,'main/home.html')
 
 def active_acts(request):
@@ -99,8 +102,16 @@ def request_register_screen(request):
      if user.is_superuser ==True:
           un_accepted_users = User.objects.filter(is_proved=False,is_declined=False)
           # accepted_users = User.objects.filter(is_proved=True,is_declined=False)
-          print("123",un_accepted_users)
+          
           return render(request,'main/Request_users.html',{'users':un_accepted_users})
+     
+def active_users_screen(request):
+     user = request.user
+     if user.is_superuser ==True:
+          active_users = User.objects.filter(is_proved=True,is_declined=False)
+          # accepted_users = User.objects.filter(is_proved=True,is_declined=False)
+          
+          return render(request,'main/Active_users.html',{'users':active_users})
 
 def accept_user(request,id):
      user_inst = User.objects.get(id=id)
@@ -114,8 +125,12 @@ def decline_user(request,id):
      user_inst.save()
      return redirect("request_register_screen")
 
-def decline_user(request,id):
+def decline_active_user(request,id):
      user_inst = User.objects.get(id=id)
      user_inst.is_declined=True
+     user_inst.is_active=False
+     user_inst.is_proved=True
+     
      user_inst.save()
-     return redirect("request_register_screen")
+     return redirect("active_users")
+

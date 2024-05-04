@@ -106,7 +106,7 @@ try {
              placeholder={prevData.door}
              name='apartment'  
              type='text' value={door}
-             required 
+            
              onChange={e => setDoor(e.target.value)}/>
 
 <label for="formFile" class="form-label">Mailbox</label>
@@ -114,7 +114,7 @@ try {
              placeholder={prevData.mailbox} 
              name='apartment'  
              type='text' value={mailbox}
-             required 
+            
              onChange={e => setMailbox(e.target.value)}/>
 
 <label for="formFile" class="form-label">Keys from the building</label>
@@ -122,7 +122,7 @@ try {
              placeholder={prevData.k_from_b}  
              name='apartment'  
              type='text' value={k_from_b}
-             required 
+             
              onChange={e => setK_from_b(e.target.value)}/>
 
 <label for="formFile" class="form-label">Garage / parking</label>
@@ -130,7 +130,7 @@ try {
              placeholder={prevData.parking}
              name='apartment'  
              type='text' value={parking}
-             required 
+             
              onChange={e => setParking(e.target.value)}/>
 
 <label for="formFile" class="form-label">Remote controls</label>
@@ -138,7 +138,7 @@ try {
              placeholder={prevData.remote_contrls} 
              name='apartment'  
              type='text' value={remote_contrls}
-             required 
+             
              onChange={e => setRemote_contrls(e.target.value)}/>
 
 <label for="formFile" class="form-label">AC remote controls</label>
@@ -146,7 +146,7 @@ try {
             placeholder={prevData.ac_controls} 
              name='apartment'  
              type='text' value={ac_controls}
-             required 
+            
              onChange={e => setAc_controls(e.target.value)}/>
 
 <label for="formFile" class="form-label">Comments on condition</label>
@@ -154,7 +154,7 @@ try {
              placeholder={prevData.comments} 
              name='apartment'  
              type='text' value={comments}
-             required 
+             
              onChange={e => setComments(e.target.value)}/>
 
 
