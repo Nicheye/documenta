@@ -8,7 +8,7 @@ urlpatterns = [
     path('act',Main_Act_View.as_view()),
 	path('act/<int:id>',Main_Act_View.as_view()),
 	path('detail/<int:id>',Detail_View.as_view()),
-	
+	path('preview/<int:id>',Preview_View.as_view()),
 	path('files/<int:id>',File_View.as_view()),
 	path('element_photo/<int:id>',Element_Photo_View.as_view()),
 	path('ownership/<int:id>',Tenants_Owners_LL_View.as_view()),

@@ -20,7 +20,7 @@ class Document(models.Model):
 	is_active= models.BooleanField(default=True)
 	document = models.FileField(upload_to="media/documents",null=True,blank=True)
 	device =models.CharField(max_length=120,default='',null=True,blank=True)
-	
+	preview = models.FileField(upload_to="media/preview",null=True,blank=True)
 	last_updated = models.DateTimeField(auto_now=True)
 	water = models.ImageField(upload_to="media/water",null=True,blank=True)
 	water_text = models.CharField(max_length=100,null=True,blank=True)

@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@cyntler/react-doc-viewer": "^1.14.1",
+    "@pdftron/webviewer": "^10.9.0",
+    "axios": "^1.6.8",
+    "mammoth": "^1.7.2",
+    "pspdfkit": "^2024.3.1",
+    "react-doc-viewer": "^0.1.5",
+    "react-docx": "^1.0.1",
+    "react-file-reader": "^1.1.4"
+  }
+}

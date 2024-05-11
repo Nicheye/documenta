@@ -164,7 +164,8 @@ def create_document(document_id):
                     owners_arr.append(owner_data)
 
             date = document.created_at.date()
-            date = datetime.strptime(date, '%Y-%m-%d')
+            date_str = date.strftime('%Y-%m-%d')  # Convert date object to string
+            date = datetime.strptime(date_str, '%Y-%m-%d')  # Parse the string into a datetime object
             date = date.strftime('%d.%m.%Y')
             context2 = {'owners': owners_arr, 'landlords': ll_arr, 'tenants': tenants_arr, 'date': date}
             doc_fin.render(context2)
@@ -218,3 +219,5 @@ def cleaner(folder_path):
                 print(f"Deleted: {file_path}")
         except Exception as e:
             print(f"Error deleting {file_path}: {e}")
+
+

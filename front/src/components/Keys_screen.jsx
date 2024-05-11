@@ -45,7 +45,7 @@ const config = {
 try {
   const { data } = await axios.post('http://127.0.0.1:8000/api/v1/keys/', user, config);
   
-  navigate(`/tenants/${id}`); // Navigate to '/next-screen/:id' route
+  navigate(`/condition_screen/${id}`); // Navigate to '/next-screen/:id' route
 } catch (error) {
   console.log(error);
 }

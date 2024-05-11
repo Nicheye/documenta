@@ -3,10 +3,13 @@ django-cors-headers
 djangorestframework
 djangorestframework-simplejwt
 docxtpl
+python-docx
+docx2pdf
 eventlet
 celery
 redis
 pillow
 python-magic
+fpdf
 #celery -A acting beat --loglevel=info
 #celery -A acting worker --loglevel=info -P eventlet

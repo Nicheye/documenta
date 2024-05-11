@@ -46,7 +46,7 @@ const File_screen = () => {
 	   <div className="begining-banner">{user.username}</div>
    
 	   <div className="finalizing-wrapper">
-	   <div className="preview-title">2. Preview</div>
+	   <div className="preview-title">2. File</div>
    
 	 
 	   <a href={doc.document} download>download file</a>

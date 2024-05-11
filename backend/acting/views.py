@@ -8,6 +8,9 @@ from .serializer import *
 from django.core.mail import EmailMessage
 from authentification.serializers import UserSerializer
 from .tasks import create_document
+from .task_preview import create_preview
+from docx2pdf import convert
+from docx import Document as Dock
 # from .tasks import my_background_task
 class Home_User_View(APIView):
 	permission_classes = [IsAuthenticated,]
@@ -498,3 +501,30 @@ class Anihilation(APIView):
 		
 		else:
 			return Response({'info': "u r not confirmed"})
+
+
+		
+class Preview_View(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_proved:
+            id = kwargs.get('id', None)
+            if id is not None:
+                try:
+                    doc = Document.objects.get(id=id)
+                except Document.DoesNotExist:
+                    return Response({'error': 'Document not found'}, status=404)
+
+				
+                
+                create_preview(doc.id)	    
+                
+				
+
+                doc_ser = Document_serializer(doc)
+                user_ser = UserSerializer(request.user)
+                return Response({'data': doc_ser.data, 'user': user_ser.data})
+                
+
+        return Response({'info': "You are not confirmed"}, status=403)

@@ -2,12 +2,23 @@ FROM python:3.9
 
 ENV PYTHONUNBUFFERED 1
 
-COPY ./requirements.txt /requirements.txt
+# Install LibreOffice and unoconv
+# RUN apt-get update \
+#     && apt-get install -y unoconv libreoffice \
+#     && apt-get clean \
+#     && rm -rf /var/lib/apt/lists/*
 
+# # Install unoconv using pip
+# RUN pip install unoconv
+
+# Copy requirements and install Python dependencies
+COPY ./requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt
 
-WORKDIR /app
+# Set environment variables for LibreOffice and pyuno
+#                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 
+WORKDIR /app
 COPY ./backend /app
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

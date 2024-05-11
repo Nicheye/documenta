@@ -79,7 +79,7 @@ try {
 }
   }
   const click = e =>{
-	navigate(`/condition_screen/${id}`); 
+	navigate(`/file/${id}`); 
 }
 const delete_ten = async(id) =>{
 	try {

@@ -42,7 +42,7 @@ const Condition_add = (props) => {
   }, [conditions]);
 
   const click = () =>{
-    navigate(`/file/${id}`)
+    navigate(`/preview/${id}`)
   }
 
   const click_element = async(name) => {

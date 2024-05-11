@@ -593,3 +593,10 @@ html{
     right: 26px;
     top: -10px;
 }
+.doc_content{
+	max-width: 400px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	margin: 0 auto;
+}

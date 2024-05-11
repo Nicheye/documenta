@@ -146,8 +146,8 @@ try {
     })
   };
 
-  const next_click =e =>{
-    navigate(`/tenants/${id}`);
+  const next_click = e =>{
+    navigate(`/condition_screen/${id}`);
   }
   return (
     <>

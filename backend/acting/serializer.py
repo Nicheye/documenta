@@ -12,7 +12,7 @@ class Document_serializer(serializers.ModelSerializer):
 	created_by = serializers.SerializerMethodField()
 	act = serializers.SerializerMethodField()
 	document = serializers.SerializerMethodField()
-	
+	preview = serializers.SerializerMethodField()
 	created_at = serializers.SerializerMethodField()
 	water = serializers.SerializerMethodField()
 	elictricity = serializers.SerializerMethodField()
@@ -30,6 +30,7 @@ class Document_serializer(serializers.ModelSerializer):
 			'apartment',
 			'is_active',
 			'document',
+			'preview',
 			'device',
 			'id',
 			'is_sent',
@@ -53,6 +54,9 @@ class Document_serializer(serializers.ModelSerializer):
 		
 	def get_document(self,obj):
 		return "http://127.0.0.1:8000" + str(obj.document.url) if obj.document else None
+	
+	def get_preview(self,obj):
+		return "http://127.0.0.1:8000" + str(obj.preview.url) if obj.preview else None
 	# def get_sign(self,obj):
 	# 	return "http://127.0.0.1:8000" + str(obj.sign.url) if obj.sign else None
 	def get_created_at(self,obj):
